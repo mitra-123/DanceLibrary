@@ -1,6 +1,13 @@
+import bcrypt
+import os
+from werkzeug.utils import secure_filename
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask import send_from_directory
 import sqlite3
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 CORS(app)
@@ -11,65 +18,144 @@ def get_db():
     return conn
 
 def init_db():
-    """Create the dances table if it doesn't exist"""
     conn = get_db()
+
+    """Create the users table if it doesn't exist"""
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL
+        )
+    """)
+
+
+    """Create the dances table if it doesn't exist"""
     conn.execute("""
         CREATE TABLE IF NOT EXISTS dances (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
             name TEXT NOT NULL,
             style TEXT,
             difficulty TEXT,
             duration INTEGER,
             music TEXT,
             video_url TEXT,
-            notes TEXT
+            notes TEXT,
+            FOREIGN KEY(user_id) REFERENCES users(id)
         )
     """)
     conn.commit()
     conn.close()
 
+
+# --------------------------
+# USER AUTHENTICATION ROUTES
+#---------------------------
+@app.route("/signup", methods=["POST"])
+def signup():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({"message": "Username and password required"}), 400
+
+    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            (username, hashed)
+        )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({"message": "Username already exists"}), 400
+
+    conn.close()
+    return jsonify({"message": "Signed Up!"}), 200
+
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({"message": "Username and password required"}), 400
+
+    conn = get_db()
+    user = conn.execute(
+        "SELECT * FROM users WHERE username = ?", (username,)
+    ).fetchone()
+    conn.close()
+
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+
+    if bcrypt.checkpw(password.encode("utf-8"), user["password_hash"]):
+        return jsonify({"message": "Login successful", "user_id": user["id"]}), 200
+    else:
+        return jsonify({"message": "Incorrect password"}), 401
+
+
+
+# ------------
+# DANCE ROUTES
+#-------------
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory("uploads", filename)
+
 @app.route("/dances", methods=["POST"])
 def add_dance():
-    data = request.json
+    user_id = request.form.get("user_id")
+    name = request.form.get("name")
+    style = request.form.get("style")
+    difficulty = request.form.get("difficulty")
+    duration = request.form.get("duration")
+    music = request.form.get("music")
+    notes = request.form.get("notes")
+
+    if not user_id or not name:
+        return jsonify({"message": "user_id and name are required"}), 400
+
+    video_url = None
+    if "video" in request.files:
+        video_file = request.files["video"]
+        filename = secure_filename(video_file.filename)
+        path = os.path.join(UPLOAD_FOLDER, filename)
+        video_file.save(path)
+        video_url = f"/{path}" 
+
     conn = get_db()
-    conn.execute(
-        "INSERT INTO dances (name, style, difficulty, duration, music, video_url, notes) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (
-            data["name"],
-            data["style"],
-            data["difficulty"],
-            data["duration"],
-            data["music"],
-            data["video_url"],
-            data["notes"]
-        )
-    )
+    conn.execute("""
+        INSERT INTO dances (user_id, name, style, difficulty, duration, music, video_url, notes)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, name, style, difficulty, duration, music, video_url, notes))
     conn.commit()
     conn.close()
-    return jsonify({"message": "Dance added"}), 201
+
+    return jsonify({"message": "Dance added!"}), 200
+    
 
 @app.route("/dances", methods=["GET"])
 def get_dances():
-    
-    columns = ["name", "style", "difficulty", "duration", "music", "video_url", "notes"]
-    
-    filters = []
-    values = []
+    user_id = request.args.get("user_id")
 
- 
-    for col in columns:
-        value = request.args.get(col)
-        if value:
-            filters.append(f"{col} LIKE ?")  
-            values.append(f"%{value}%")      
-
-    query = "SELECT * FROM dances"
-
-    if filters:
-        query += " WHERE " + " AND ".join(filters)
+    if not user_id:
+        return jsonify([])
 
     conn = get_db()
-    dances = conn.execute(query, values).fetchall()
+    dances = conn.execute(
+        "SELECT * FROM dances WHERE user_id = ?",
+        (user_id,)
+    ).fetchall()
     conn.close()
 
     return jsonify([dict(d) for d in dances])

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DanceLibrary</title>
+    <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+    <nav class="nav">
+        <p class="nav-text">Welcome!</p>
+        <img src="https://placehold.co/50" alt="User Profile Picture" class= "nav-avatar">
+    </nav>
+
+    <div class="search">
+        <form id="search-form">
+        <input type="text" placeholder="Search..." class="search-bar" id="search">
+        <button type="submit"><i class="search-button" id="search-btn">Search</i></button>
+    </form>
+        <div class="filters" id="filters">
+        </div>
+    </div>
+
+    <div class="dances">
+        <h1 class="dance-header">My Dances</h1>
+
+        <div class="dance-actions hidden" id="dance-actions">
+        <button class="add-dance-btn" id="open-add-dance">＋ Add Dance</button>
+        <button class="edit-dance-btn" id="toggle-bulk-edit">Edit</button>
+        <button class="delete-selected-btn hidden" id="delete-selected">Delete Selected</button>
+    </div>
+    </div>
+
+    <div class="dances-container"></div>
+
+    <div class="modal hidden" id="auth-modal">
+
+        <div class="modal-content">
+            <button class="close-btn" id="close-auth">&times;</button>
+
+            <h2 id="auth-title">Sign In</h2>
+
+            <input type="text" id="auth-username" placeholder="Username" autocomplete="off"/>
+            <input type="password" id="auth-password" placeholder="Password" />
+
+
+        <div class="auth-actions">
+            <button id="signin-btn">Sign In</button>
+            <button id="signup-btn" class="secondary">Sign Up</button>
+            
+        </div>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="add-dance-modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-add-dance">&times;</button>
+            <h2>Add Dance</h2>
+    
+            <input id="dance-name" placeholder="Dance name" />
+            <input id="dance-style" placeholder="Style" />
+            <input id="dance-difficulty" placeholder="Difficulty" />
+            <input id="dance-duration" type="number" placeholder="Duration (min)" />
+            <input id="dance-music" placeholder="Music" />
+            <input id="dance-video" type="file" accept="video/*" />
+            <textarea id="dance-notes" placeholder="Notes"></textarea>
+    
+            <button id="save-dance">Save Dance</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="edit-dance-modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-edit-dance">&times;</button>
+            <h2>Edit Dance</h2>
+    
+            <input id="edit-name" placeholder="Dance name" />
+            <input id="edit-style" placeholder="Style" />
+            <input id="edit-difficulty" placeholder="Difficulty" />
+            <input id="edit-duration" type="number" placeholder="Duration (min)" />
+            <input id="edit-music" placeholder="Music" />
+            <input id="edit-video" placeholder="Video URL" />
+            <textarea id="edit-notes" placeholder="Notes"></textarea>
+    
+            <button id="save-edit">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="video-modal">
+        <div class="modal-content">
+          <button class="close-btn" id="close-video-modal">&times;</button>
+          <h2 id="video-title"></h2>
+          <video id="dance-video-player" controls preload="metadata" width="100%">
+            <source id="dance-video-source" src="" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      
+
+    <script src="script.js"></script>
+</body>
+
+</html>
