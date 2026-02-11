@@ -1,27 +1,84 @@
-# DanceLibrary CRUD Application
-Full-stack web application enabling users to create, view, update, and delete dance entries, built with Flask and SQLite.
+# 💃 DanceLibrary CRUD Application
+A full-stack web application that allows users to create, manage, and organize dance entries with video uploads, filtering, and authentication. Built with Flask and SQLite.
+
 ## Features
+
+### 🔐 User Authentication
+- User signup and login
+- Password hashing using bcrypt
+- User-specific dance libraries
+- Conditional UI rendering based on login state
+
+### 🩰 Dance Management (Full CRUD)
 - Create new dance entries
-- View all dances in the library
-- Update existing dance information
-- Delete dances
-- RESTful API built with Flask
-- SQLite database for persistent storage
+- View all dances for a logged-in user
+- Edit dance details through modal interface
+- Delete individual dances
+- Bulk delete multiple dances
 
-## Tech Stack
-- Frontend: HTML, CSS, JavaScript
-- Backend: Flask (Python)
-- Database: SQLite
+### 🔎 Search & Filtering
+Client-side filtering by:
+- Dance name
+- Style
+- Music
+- Multi-term search with dynamic filter chips
+- Real-time filtering without page reload
 
-## Setup Instructions
-1. Clone the repository
-2. Create a virtual environment
-3. Install dependencies
-4. Run the Flask server
-5. Open `index.html` in the browser
+### 🎥 Video Upload Support
+- Secure file uploads using secure_filename
+- Videos stored locally
+- Dynamic video playback modal
 
-## Future Improvements
-- User authentication
-- Dance filtering and search
-- Video uploads
-- Responsive UI improvements
+### 🎨 Interactive UI
+- Modal-based editing system
+- Dropdown action menus per dance card
+- Conditional action visibility based on authentication
+- Bulk edit mode toggle
+
+## 🛠 Tech Stack
+### Frontend
+- HTML
+- CSS
+- JavaScript (Vanilla JS)
+
+### Backend
+- Flask (Python)
+- Flask-CORS
+- 
+### Database
+- SQLite
+
+### Authentication
+- bcrypt password hashing
+
+### File Handling
+- Werkzeug secure file uploads
+  
+## ⚙️ Setup Instructions
+### 1. Clone the repository
+git clone <your-repo-url>
+cd <project-folder>
+
+### 2. Create a virtual environment
+python3 -m venv venv
+
+### 3. Activate the virtual environment
+Mac/Linux: source venv/bin/activate
+Windows: venv\Scripts\activate
+
+### 4. Install dependencies
+pip install -r requirements.txt
+
+### 5. Run the Flask server
+python app.py
+The server will run on: http://127.0.0.1:5000
+
+### 6. Open the frontend
+Open index.html in your browser.
+
+## 🔮 Future Improvements
+- Backend route protection (token-based authentication)
+- Pagination for large datasets
+- Cloud database deployment
+- Production deployment (Render / Railway / etc.)
+- UI design refinement and aesthetic enhancements
