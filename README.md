@@ -44,7 +44,7 @@ Client-side filtering by:
 ### Backend
 - Flask (Python)
 - Flask-CORS
-- 
+  
 ### Database
 - SQLite
 
@@ -64,6 +64,7 @@ python3 -m venv venv
 
 ### 3. Activate the virtual environment
 Mac/Linux: source venv/bin/activate
+
 Windows: venv\Scripts\activate
 
 ### 4. Install dependencies
@@ -71,6 +72,7 @@ pip install -r requirements.txt
 
 ### 5. Run the Flask server
 python app.py
+
 The server will run on: http://127.0.0.1:5000
 
 ### 6. Open the frontend
