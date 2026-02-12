@@ -2,7 +2,7 @@
 A full-stack web application that allows users to create, manage, and organize dance entries with video uploads, filtering, and authentication. Built with Flask and SQLite.
 
 # Live Demo
-Try it here: [Render Link](https://your-app.onrender.com)
+Try it here: [Render Link] https://your-app.onrender.com)](https://dancelibrary-6oxw.onrender.com
 ## Features
 
 ### 🔐 User Authentication
