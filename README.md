@@ -1,6 +1,8 @@
 # 💃 DanceLibrary CRUD Application
 A full-stack web application that allows users to create, manage, and organize dance entries with video uploads, filtering, and authentication. Built with Flask and SQLite.
 
+# Live Demo
+Try it here: [Render Link](https://your-app.onrender.com)
 ## Features
 
 ### 🔐 User Authentication
@@ -54,7 +56,7 @@ Client-side filtering by:
 ### File Handling
 - Werkzeug secure file uploads
   
-## ⚙️ Setup Instructions
+## ⚙️ Local Setup Instructions
 ### 1. Clone the repository
 git clone <your-repo-url>
 cd <project-folder>
@@ -74,9 +76,6 @@ pip install -r requirements.txt
 python app.py
 
 The server will run on: http://127.0.0.1:5000
-
-### 6. Open the frontend
-Open index.html in your browser.
 
 ## 🔮 Future Improvements
 - Backend route protection (token-based authentication)
