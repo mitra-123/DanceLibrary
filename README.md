@@ -81,5 +81,4 @@ The server will run on: http://127.0.0.1:5000
 - Backend route protection (token-based authentication)
 - Pagination for large datasets
 - Cloud database deployment
-- Production deployment (Render / Railway / etc.)
 - UI design refinement and aesthetic enhancements
