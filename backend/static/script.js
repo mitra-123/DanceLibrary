@@ -38,7 +38,7 @@ document.querySelector(".dances-container").addEventListener("click", (e) => {
     }
 
       
-        videoSource.src = `http://127.0.0.1:5000${dance.video_url}`;
+        videoSource.src = `${dance.video_url}`;
         videoTitle.textContent = dance.name;
 
 
@@ -104,7 +104,7 @@ function openEditModal(danceId) {
       notes: document.getElementById("edit-notes").value
     };
   
-    await fetch(`http://127.0.0.1:5000/dances/${editingDanceId}`, {
+    await fetch(`/dances/${editingDanceId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedDance)
@@ -121,7 +121,7 @@ function openEditModal(danceId) {
   
 async function deleteDance(id) {
 
-    await fetch(`http://127.0.0.1:5000/dances/${id}`, {
+    await fetch(`/dances/${id}`, {
         method: "DELETE"
     });
 
@@ -153,7 +153,7 @@ async function loginUser() {
         return;
     }
 
-    const res = await fetch("http://127.0.0.1:5000/login",{
+    const res = await fetch("/login",{
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
@@ -186,7 +186,7 @@ async function signupUser() {
       return;
     }
   
-    const res = await fetch("http://127.0.0.1:5000/signup", {
+    const res = await fetch("/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
@@ -319,7 +319,7 @@ async function loadDances() {
     }
 
     const res = await fetch(
-        `http://127.0.0.1:5000/dances?user_id=${currentUser.id}`
+        `/dances?user_id=${currentUser.id}`
       );
       
     allDances = await res.json();
@@ -355,7 +355,7 @@ async function addDance() {
         formData.append("video", danceVideo); 
     }
 
-    const res = await fetch("http://127.0.0.1:5000/dances", {
+    const res = await fetch("/dances", {
         method: "POST",
         body: formData 
     });
@@ -381,7 +381,7 @@ async function updateDance(){
         notes: document.getElementById("dance-notes").value
     };
 
-    await fetch("http://127.0.0.1:5000/dances", {
+    await fetch("/dances", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

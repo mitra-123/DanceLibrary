@@ -5,12 +5,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask import send_from_directory
 import sqlite3
+from flask import render_template
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-app = Flask(__name__)
-CORS(app)
+app = Flask(__name__, static_folder="static")
+#CORS(app)
 
 def get_db():
     conn = sqlite3.connect("database.db")
@@ -48,6 +49,9 @@ def init_db():
     conn.commit()
     conn.close()
 
+@app.route("/")
+def serve_frontend():
+    return send_from_directory("static", "index.html")
 
 # --------------------------
 # USER AUTHENTICATION ROUTES
@@ -198,4 +202,4 @@ def delete_dance(id):
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True)
+    
