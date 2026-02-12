@@ -51,7 +51,7 @@ def init_db():
 
 @app.route("/")
 def serve_frontend():
-    return send_from_directory("static", "index.html")
+    return render_template("index.html")
 
 # --------------------------
 # USER AUTHENTICATION ROUTES
