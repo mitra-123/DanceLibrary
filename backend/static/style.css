@@ -29,24 +29,42 @@
 
 
 /* Search Bar & Filters */
-.search{
+.search {
     display: flex;
-    align-items: center;
-    padding: 2% 5%;
     justify-content: center;
-    height: 10em;
+    align-items: center;
+    gap: 1rem;
+    padding: 3% 5%;
 }
 
-.search-bar{
-    width: 50%;
-    height: 50%;
-
+#search-form {
+    display: flex;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
 }
 
-.search-button{
+.search-bar {
+    width: 100%;
+    height: 3.5rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.search button {
+    height: 3.5rem;
+    padding: 0 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    background: var(--accent);
+    font-size: 1rem;
     cursor: pointer;
+    white-space: nowrap;
 }
-
 .filters {
     display: flex;
     gap: 0.5rem;
@@ -83,10 +101,18 @@
 
 }
 
-
+.dance-card {
+    width: 14rem;              /* fixed width */
+    height: 18rem;             /* fixed height */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+}
 
 /* dances section */
-.dances-container{
+/*.dances-container{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     justify-content: center;
@@ -97,9 +123,15 @@
     margin-left: 5%;
     margin-right: 5%;
     gap: 1rem;
-    justify-items: start; /* make cards align to the left */
+    justify-items: start; /* make cards align to the left 
     align-items: start;
     
+}
+*/
+.dances-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1.5rem;
 }
 
 .dance-card {
@@ -118,12 +150,19 @@
     transform: scale(1.03);
 }
 
-.dance-card img {
+/*.dance-card img {
     border-radius: 0.6rem;
     margin-bottom: 0.5rem;
-    width: 100%; /* make image fill card width */
-    height: auto; /* maintain aspect ratio */
-    object-fit: cover; /* crop nicely if needed */
+    width: 100%; /* make image fill card width 
+    height: auto; /* maintain aspect ratio 
+    object-fit: cover; /* crop nicely if needed 
+}*/
+
+.dance-card img {
+    width: 100%;
+    height: 9rem;
+    object-fit: cover;
+    border-radius: 0.75rem;
 }
 
 /* Optional: dance name and style */
@@ -269,5 +308,180 @@
     transform: scale(1.2);
   }
   
+  /* --------------------------- */
+/* 🌟 Modern Neutral Theme      */
+/* --------------------------- */
+
+:root {
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+    --border: #e5e5e5;
+    --text: #222;
+    --soft: #f4f4f4;
+    --accent: #cfcfcf;
+}
+
+/* Page background */
+body {
+    background: var(--bg);
+    font-family: "Inter", sans-serif;
+}
+
+
+/* --------------------------- */
+/* 🔍 Search Bar Improvements   */
+/* --------------------------- */
+.search {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3% 5%;
+}
+
+.search-bar {
+    width: 70%;
+    height: 3.5rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Search button soft styling */
+.search button {
+    margin-left: 0.8rem;
+    padding: 0.9rem 1.4rem;
+    border-radius: 1rem;
+    border: none;
+    background: var(--accent);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.search button:hover {
+    opacity: 0.8;
+}
+
+
+
+/* --------------------------- */
+/* 🕺 Dances Container Styling  */
+/* --------------------------- */
+
+.dances-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;           /* <-- Rounded corners */
+    padding: 3%;
+    margin: 2% 5%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+/* Cards look cleaner */
+.dance-card {
+    background: var(--soft);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.dance-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* Cover images */
+.dance-card img {
+    border-radius: 0.75rem;
+    height: 140px;
+    object-fit: cover;
+    width: 100%;
+}
+
+
+
+/* --------------------------- */
+/* 👤 Navbar Avatar Image Fix   */
+/* --------------------------- */
+
+.nav-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--soft);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nav-avatar:hover {
+    opacity: 0.8;
+}
+
+
+
+/* --------------------------- */
+/* 🪟 Modal Soft Styling        */
+/* --------------------------- */
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-content input {
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.8rem;
+}
+
+
+
+/* --------------------------- */
+/* 🏷️ Filter Chips Restyle      */
+/* --------------------------- */
+
+.filter-chip {
+    background: var(--soft);
+    border-radius: 1rem;
+    padding: 0.4rem 0.8rem;
+}
+
+.filter-chip button {
+    color: #666;
+}
+
+button {
+    background: var(--soft);
+    border: 1px solid var(--border);
+    padding: 0.7rem 1.2rem;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-size: 1rem;
+}
+
+button:hover {
+    background: var(--accent);
+}
+
+/* Red delete buttons */
+.delete-btn,
+.delete-selected-btn {
+    background: #ffe3e3;
+    color: #a33;
+}
+
+.delete-btn:hover,
+.delete-selected-btn:hover {
+    background: #ffcccc;
+}
+
 
 

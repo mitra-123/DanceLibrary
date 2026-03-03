@@ -21,31 +21,32 @@ closeVideoBtn.addEventListener("click", () => {
 });
 
 document.querySelector(".dances-container").addEventListener("click", (e) => {
-    const card = e.target.closest(".dance-card");
-    if(!card) return;
+  const card = e.target.closest(".dance-card");
+  if (!card) return;
 
-    if (e.target.closest(".card-meanu")) return;
+  // prevent video opening on menu clicks
+  if (e.target.closest(".card-menu")) return;
+  if (e.target.classList.contains("menu-btn")) return;
+  if (e.target.classList.contains("edit-btn")) return;
+  if (e.target.classList.contains("delete-btn")) return;
+  if (e.target.classList.contains("bulk-checkbox")) return;
 
-    if (!requireAuth()) return; 
-    
-    
-    const danceId = card.dataset.id;
-    const dance = allDances.find(d => d.id == danceId);
-    
-    if (!dance || !dance.video_url) {
-        alert("No video available for this dance.");
-        return;
-    }
+  if (!requireAuth()) return;
 
-      
-        videoSource.src = `${dance.video_url}`;
-        videoTitle.textContent = dance.name;
+  const danceId = card.dataset.id;
+  const dance = allDances.find(d => d.id == danceId);
 
+  if (!dance || !dance.video_url) {
+      alert("No video available for this dance.");
+      return;
+  }
 
-        videoPlayer.load(); 
-        videoModal.classList.remove("hidden");
-        videoPlayer.play();
-    
+  videoSource.src = dance.video_url;
+  videoTitle.textContent = dance.name;
+
+  videoPlayer.load();
+  videoModal.classList.remove("hidden");
+  videoPlayer.play();
 });
 
 document.getElementById("save-dance").addEventListener("click", addDance);
@@ -268,6 +269,8 @@ if (e.target.classList.contains("edit-btn")) {
 
 });
 
+
+
 function renderDances(dances) {
     const container = document.querySelector(".dances-container");
     const showActions = currentUser.id !== null;
@@ -296,7 +299,7 @@ function renderDances(dances) {
             </div>
         </div>
     ` : ""}
-    <img src="https://placehold.co/120" alt="${dance.name}">
+    <img src="${dance.thumbnail || 'https://placehold.co/600x400'}" alt="${dance.name}">
     <h3>${dance.name}</h3>
     <p>${dance.style || ""}</p>
     `;
@@ -325,50 +328,67 @@ async function loadDances() {
     allDances = await res.json();
     renderDances(allDances);
 }
+function generateThumbnail(videoFile, callback) {
+  const video = document.createElement("video");
+  video.src = URL.createObjectURL(videoFile);
 
-async function addDance() {
-    if (!currentUser.id) return;
+  video.addEventListener("loadedmetadata", () => {
+    video.currentTime = 1; // seek to 1s
+  });
 
-    const danceName = document.getElementById("dance-name").value.trim();
-    const danceVideo = document.getElementById("dance-video").files[0];
-
-    if (!danceName) {
-        alert("Dance name is required");
-        return;
-    }
-
-    if (!danceVideo) {
-        alert("Dance video is required");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("user_id", currentUser.id);
-    formData.append("name", danceName);
-    formData.append("style", document.getElementById("dance-style").value);
-    formData.append("difficulty", document.getElementById("dance-difficulty").value);
-    formData.append("duration", Number(document.getElementById("dance-duration").value));
-    formData.append("music", document.getElementById("dance-music").value);
-    formData.append("notes", document.getElementById("dance-notes").value);
-
-    if (danceVideo) {
-        formData.append("video", danceVideo); 
-    }
-
-    const res = await fetch("/dances", {
-        method: "POST",
-        body: formData 
-    });
-
-    if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || "Failed to add dance");
-        return;
-    }
-
-    addDanceModal.classList.add("hidden");
-    loadDances();
+  video.addEventListener("seeked", () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 400;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    callback(canvas.toDataURL());
+  });
 }
+async function addDance() {
+  if (!currentUser.id) return;
+
+  const danceName = document.getElementById("dance-name").value.trim();
+  const videoFile = document.getElementById("dance-video").files[0];
+
+  if (!danceName || !videoFile) {
+      alert("Name + video required.");
+      return;
+  }
+
+  // Generate thumbnail first
+  generateThumbnail(videoFile, async (thumbnail) => {
+      // Build FormData to send video + dance info
+      const formData = new FormData();
+      formData.append("user_id", currentUser.id);
+      formData.append("name", danceName);
+      formData.append("style", document.getElementById("dance-style").value);
+      formData.append("difficulty", document.getElementById("dance-difficulty").value);
+      formData.append("duration", Number(document.getElementById("dance-duration").value));
+      formData.append("music", document.getElementById("dance-music").value);
+      formData.append("video", videoFile);
+      formData.append("notes", document.getElementById("dance-notes").value);
+      formData.append("thumbnail", thumbnail); // now properly defined
+
+      console.log("Submitting dance", danceName, videoFile, formData);
+      // Send to backend
+      const res = await fetch("/dances", {
+          method: "POST",
+          body: formData
+      });
+
+      if (!res.ok) {
+          const data = await res.json();
+          alert(data.message || "Failed to add dance.");
+          return;
+      }
+
+      // Close modal & reload dances
+      document.getElementById("add-dance-modal").classList.add("hidden");
+      loadDances();
+  });
+}
+
 
 async function updateDance(){
     const dance = {
@@ -502,10 +522,12 @@ function filterDances() {
     filterDances();
   });
   
-  
   updateNavbar();
-
 });
+
+
+
+
  
 
 

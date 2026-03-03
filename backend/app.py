@@ -42,6 +42,7 @@ def init_db():
             duration INTEGER,
             music TEXT,
             video_url TEXT,
+            thumbnail TEXT,
             notes TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         )
@@ -125,6 +126,7 @@ def add_dance():
     duration = request.form.get("duration")
     music = request.form.get("music")
     notes = request.form.get("notes")
+    thumbnail = request.form.get("thumbnail")
 
     if not user_id or not name:
         return jsonify({"message": "user_id and name are required"}), 400
@@ -139,9 +141,9 @@ def add_dance():
 
     conn = get_db()
     conn.execute("""
-        INSERT INTO dances (user_id, name, style, difficulty, duration, music, video_url, notes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (user_id, name, style, difficulty, duration, music, video_url, notes))
+       INSERT INTO dances (user_id, name, style, difficulty, duration, music, video_url, thumbnail, notes)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, name, style, difficulty, duration, music, video_url, thumbnail, notes))
     conn.commit()
     conn.close()
 
